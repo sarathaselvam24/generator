@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Details</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f7f7f7;
+	margin: 0;
+	padding: 0;
+}
+	body {
+	background-image: url('http://localhost:8080/images/file.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+}
+.container {
+	max-width: 800px;
+	margin: 50px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+	text-align: center;
+	color: #333;
+}
+
+.message {
+	text-align: center;
+	margin-bottom: 20px;
+	padding: 10px;
+	background-color: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+	border-radius: 5px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+}
+
+th, td {
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+}
+
+th {
+	background-color: #f2f2f2;
+	color: #333;
+	text-align: left;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+tr:hover {
+	background-color: #ddd;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Employee Details</h1>
+		<!-- Check if employeeDetails list is empty -->
+		<div th:if="${employee == null or employee.size() == 0}"
+			class="message">
+			<p>No employee data found</p>
+		</div>
+		<!-- If employeeDetails list is not empty, display the table -->
+		<div th:if="${employee != null and employee.size() > 0}">
+			<table>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Phone Number</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="employee : ${employee}">
+						<td th:text="${employee.empid}">Employee ID</td>
+						<td th:text="${employee.name}">Employee Name</td>
+						<td th:text="${employee.email}">Email</td>
+						<td th:text="${employee.phonenumber}">Phone</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div>
+		<button>
+			<span id="logoutButtonText" onclick="logout()">Logout</span> <i
+				class="fas fa-user"></i>
+		</button>
+	</div>
+
+	<script>
+ 	function logout() {
+
+			window.location.href = '/logout';
+		}
+	</script>
+</body>
+</html>

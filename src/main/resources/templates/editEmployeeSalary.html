@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Salary Details</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4;
+}
+
+body {
+	background-image: url('http://localhost:8080/images/file.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+}
+
+.container {
+	max-width: 400px;
+	margin: 50px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+form {
+	margin-top: 20px;
+}
+
+label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+input[type="text"] {
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+button {
+	background-color: #4CAF50;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	width: 100%;
+}
+
+button:hover {
+	background-color: #45a049;
+}
+</style>
+</head>
+<body>
+
+	<div class="container">
+		<h1>Employee Salart Details</h1>
+		<form th:action="@{/updateEmployeeSalary}" method="post"
+			th:object="${empSalaryData}" id="empSalaryData">
+			<label for="empid">Employee ID:</label> <input type="text" id="empid"
+				name="empid" th:field="*{empid}" readonly> <label
+				for="basicpay">Basic Pay</label> <input type="text" id="basicpay"
+				name="basicpay" th:field="*{basicpay}"> <label
+				for="houseallowance">House Allowance:</label> <input type="text"
+				id="houseallowance" name="houseallowance"
+				th:field="*{houseallowance}"> <label for="specialallowance">Special
+				Allowance:</label> <input type="text" id="specialallowance"
+				name="specialallowance" th:field="*{specialallowance}"> <label
+				for="providentfund">Provident Fund</label> <input type="text"
+				id="providentfund" name="providentfund" th:field="*{providentfund}">
+
+			<label for="shift">Select Shift:</label> <select id="shift"
+				name="shift">
+				<option value="general">General</option>
+				<option value="night">Night</option>
+			</select>
+
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+	<div>
+		<button>
+			<span id="logoutButtonText" onclick="logout()">Logout</span> <i
+				class="fas fa-user"></i>
+		</button>
+	</div>
+
+	<script>
+ 	function logout() {
+
+			window.location.href = '/logout';
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay Slip Generation</title>
+<style>
+body {
+	background-image: url('http://localhost:8080/images/file.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+}
+</style>
+</head>
+
+<body>
+
+	<h1>Pay Slip Generation</h1>
+
+	<!-- Display the message using Thymeleaf expression -->
+	<div th:if="${msg}">
+		<p th:text="${msg}"></p>
+	</div>
+
+	<!-- Home button -->
+	<a href="/admin" th:text="Home"></a>
+
+</body>
+</html>

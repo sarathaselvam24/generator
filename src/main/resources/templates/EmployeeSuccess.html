@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Profile</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            background-image: url('http://localhost:8080/images/file.png');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px; /* Adjust as needed */
+        }
+
+        .button-container button {
+            margin-bottom: 10px; /* Adjust as needed */
+            padding: 10px 20px;
+            background-color: #007bff; /* Adjust button color */
+            color: #ffffff; /* Adjust text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3; /* Adjust hover color */
+        }
+    </style>
+</head>
+<body>
+<div class="message">Profile Updated successfully!</div>
+<div class="button-container">
+    <button onclick="onlo()">
+        <span id="onLoadButtonText">Home</span> <i class="fas fa-user"></i>
+    </button>
+    <button onclick="logout()">
+        <span id="logoutButtonText">Logout</span> <i class="fas fa-sign-out-alt"></i>
+    </button>
+</div>
+<script>
+    function onlo() {
+        window.location.href = '/onload';
+    }
+
+    function logout() {
+        window.location.href = '/logout';
+    }
+</script>
+</body>
+</html>

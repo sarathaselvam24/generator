@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Employee Profile</title>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+body {
+	font-family: Arial, sans-serif;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	position: relative;
+}
+
+.form-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.form-container {
+	visibility: hidden;
+}
+
+.form-container .row {
+	display: flex;
+	justify-content: center;
+}
+
+.form-container .col-md-6 {
+	flex: 0 0 50%;
+	max-width: 50%;
+	padding: 0 20px;
+}
+
+.form-container .form-group {
+	display: flex;
+	align-items: center;
+	margin-bottom: 7px;
+}
+
+.form-container .form-group label {
+	width: 100px;
+	text-align: right;
+	margin-right: 8px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.form-container .form-group input, .form-container .form-group textarea
+	{
+	flex: 1;
+	padding: 4px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 13px;
+	width: 70%;
+}
+
+.form-container .form-group textarea {
+	height: 50px;
+}
+
+.form-container button {
+	width: 50%;
+	background-color: #4CAF50;
+	color: white;
+	padding: 8px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.form-container button:hover {
+	background-color: #45a049;
+}
+
+#payslipForm {
+	position: fixed;
+	top: 40%;
+	left: 40%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	z-index: 999;
+	width: 50%; /* Adjust the width as needed */
+	max-width: 400px; /* Limit the maximum width of the form */
+	height: 60%;
+}
+
+#payslipViewForm {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	z-index: 999;
+	width: 50%; /* Adjust the width as needed */
+	max-width: 600px; /* Limit the maximum width of the form */
+	height: 100%;
+}
+
+#ViewAccountDetailForm {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	z-index: 999;
+	width: 50%; /* Adjust the width as needed */
+	max-width: 600px; /* Limit the maximum width of the form */
+	height: 100%;
+}
+
+.form-container select {
+	width: 60%;
+	padding: 8px;
+	font-size: 14px;
+	justify-content: center;
+}
+
+body {
+	background-image: url('http://localhost:8080/images/file.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+}
+
+.notification-bar {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	width: 300px;
+	background-color: red;
+	color: white;
+	padding: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	z-index: 9999;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.notification-bar p {
+	margin: 0;
+	flex-grow: 1;
+}
+
+.close-button {
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+#payslipSelectionForm button[type=submit] {
+	width: 40%;
+	padding: 8px;
+	font-size: 14px;
+}
+
+.vertical-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px; /* Adjust the space between the items */
+}
+
+.vertical-container>div {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.vertical-container>div button {
+	margin-right: 10px; /* Add space between the buttons */
+}
+
+.vertical-container>div i {
+	font-size: 18px;
+	color: #80669d;
+	margin-left: 5px; /* Adjust to your preference */
+}
+
+.form-container .col-md-6 {
+	flex: 0 0 45%; /* Adjusted width */
+	max-width: 45%; /* Adjusted width */
+	padding: 0 10px; /* Adjusted padding */
+}
+</style>
+<script th:inline="javascript">
+	function toggleEmployeeForm() {
+		var ViewAccountDetailForm = document
+				.getElementById("ViewAccountDetailForm");
+		var payslipViewForm = document.getElementById("payslipViewForm");
+		var form = document.getElementById("formcontainer");
+		var button = document.getElementById("profileButtonText");
+		var payslipForm = document.getElementById("payslipForm");
+		var togglePaySlipButton = document.getElementById("payslipButtonText");
+
+		if (form.style.visibility === "hidden") {
+
+			form.style.visibility = "visible";
+			button.textContent = "Hide Profile";
+			payslipForm.style.visibility = "hidden";
+			ViewAccountDetailForm.style.visibility = "hidden";
+			payslipViewForm.style.visibility = "hidden";
+			togglePaySlipButton.textContent = "Payslip";
+		} else {
+			form.style.visibility = "hidden";
+			button.textContent = "Profile";
+		}
+	}
+	function togglePayslipForm() {
+		var ViewAccountDetailForm = document
+				.getElementById("ViewAccountDetailForm");
+		var payslipForm = document.getElementById("payslipForm");
+		var form = document.getElementById("formcontainer");
+		var button = document.getElementById("profileButtonText");
+		var togglePaySlipButton = document.getElementById("payslipButtonText");
+		var payslipViewForm = document.getElementById("payslipViewForm");
+		if (payslipForm.style.visibility === "hidden") {
+			payslipForm.style.visibility = "visible";
+			form.style.visibility = "hidden";
+			payslipViewForm.style.visibility = "hidden";
+			ViewAccountDetailForm.style.visibility = "hidden";
+			button.textContent = "Profile";
+			togglePaySlipButton.textContent = "Hide Payslip";
+		} else {
+			payslipForm.style.visibility = "hidden";
+			payslipViewForm.style.visibility = "hidden";
+			togglePaySlipButton.textContent = "Payslip"
+		}
+	}
+	function payslipFormOnload() {
+		var ViewAccountDetailForm = document
+				.getElementById("ViewAccountDetailForm");
+		var payslipForm = document.getElementById("payslipForm");
+		var form = document.getElementById("formcontainer");
+		var button = document.getElementById("profileButtonText");
+		var togglePaySlipButton = document.getElementById("payslipButtonText");
+		var payslipViewForm = document.getElementById("payslipViewForm");
+		if (payslipViewForm.style.visibility === "visible") {
+			togglePaySlipButton.textContent = "Hide Payslip";
+		}
+	}
+	function viewPrimaryDetailForm() {
+		var ViewAccountDetailForm = document
+				.getElementById("ViewAccountDetailForm");
+		var payslipViewForm = document.getElementById("payslipViewForm");
+		var payslipForm = document.getElementById("payslipForm");
+		var form = document.getElementById("formcontainer");
+		var button = document.getElementById("profileButtonText");
+		var togglePaySlipButton = document.getElementById("payslipButtonText");
+		if (payslipViewForm.style.visibility === "hidden") {
+			payslipViewForm.style.visibility = "visible";
+			form.style.visibility = "hidden";
+			payslipForm.style.visibility = "hidden";
+			ViewAccountDetailForm.style.visibility = "hidden";
+			button.textContent = "Hide Profile";
+			togglePaySlipButton.textContent = "Payslip";
+		}
+	}
+
+	function viewAccountDetailForm() {
+
+		var ViewAccountDetailForm = document
+				.getElementById("ViewAccountDetailForm");
+		var payslipViewForm = document.getElementById("payslipViewForm");
+		var payslipForm = document.getElementById("payslipForm");
+		var form = document.getElementById("formcontainer");
+		var button = document.getElementById("profileButtonText");
+		var togglePaySlipButton = document.getElementById("payslipButtonText");
+		if (ViewAccountDetailForm.style.visibility === "hidden") {
+			ViewAccountDetailForm.style.visibility = "visible";
+			form.style.visibility = "hidden";
+			payslipForm.style.visibility = "hidden";
+			payslipViewForm.style.visibility = "hidden";
+			button.textContent = "Hide Profile";
+			togglePaySlipButton.textContent = "Payslip";
+		}
+	}
+
+	function generateMonthYearDropdown() {
+		var joiningDate = new Date(document.getElementById("joiningDate").value);
+
+		var currentDate = new Date();
+		var months = [];
+		var monthSelect = document.getElementById("monthSelect");
+		var yearSelect = document.getElementById("yearSelect");
+
+		// Calculate the number of months between joining date and current date
+		var diffMonths = (currentDate.getFullYear() - joiningDate.getFullYear())
+				* 12 + (currentDate.getMonth() - joiningDate.getMonth()) + 1;
+
+		for (var i = 0; i < diffMonths; i++) {
+			var date = new Date(joiningDate.getFullYear(), joiningDate
+					.getMonth()
+					+ i, 1);
+			var month = date.toLocaleString('default', {
+				month : 'long'
+			});
+			var year = date.getFullYear();
+
+			months.push({
+				month : month,
+				year : year
+			});
+		}
+
+		months.forEach(function(item) {
+			var option = document.createElement("option");
+			option.text = item.month + " " + item.year;
+			monthSelect.add(option);
+		});
+	}
+</script>
+<script th:inline="javascript">
+	function showNotification() {
+		var notification = document.getElementById('errormessage');
+		notification.style.display = 'flex';
+		setTimeout(function() {
+			notification.style.display = 'none';
+		}, 5000);
+	}
+	function showSuccessNotification() {
+		var notification = document.getElementById('successmessage');
+		notification.style.display = 'flex';
+		setTimeout(function() {
+			notification.style.display = 'none';
+		}, 5000);
+	}
+</script>
+</head>
+<body>
+	<div class="vertical-container"
+		style="position: fixed; top: 20px; left: 20px;">
+		<div>
+			<button id="toggleButton" onclick="toggleEmployeeForm()">
+				<span id="profileButtonText">Profile</span> <i class="fas fa-user"></i>
+			</button>
+		</div>
+		<div>
+			<button id="togglePaySlipButton" onclick="togglePayslipForm()">
+				<span id="payslipButtonText">Payslip</span><i
+					class="fas fa-file-invoice-dollar"></i>
+			</button>
+		</div>
+		<div>
+			<button>
+				<span id="logoutButtonText" onclick="logout()">Logout</span> <i
+					class="fas fa-user"></i>
+			</button>
+		</div>
+	</div>
+
+
+	<div class="form-container" id="formcontainer"
+		style="visibility: hidden;">
+		<div class="row">
+			<div class="col-md-6">
+
+				<form th:object="${employee}" id="employeeForm">
+					<h2 style="color: #069">Primary Details</h2>
+					<div class="form-group">
+						<label for="empid">Employee ID:</label> <input type="text"
+							id="empid" th:field="*{empid}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="email">Email:</label> <input type="email" id="email"
+							th:field="*{email}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="name">Name:</label> <input type="text" id="name"
+							th:field="*{name}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="phoneNumber">Phone Number:</label> <input type="text"
+							id="phoneNumber" th:field="*{phonenumber}" readonly
+							class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="address">Address:</label>
+						<textarea id="address" th:field="*{address}" readonly
+							class="plain-input"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="joiningDate">Joining Date:</label> <input type="date"
+							id="joiningDate" th:field="*{joiningdate}" readonly
+							class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="designation">Designation:</label> <input type="text"
+							id="designation" th:field="*{designation}" readonly
+							class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="location">Location:</label> <input type="text"
+							id="location" th:field="*{location}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="companyName">Company Name:</label> <input type="text"
+							id="companyName" th:field="*{companyname}" readonly
+							class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="dateofbirth">Date of Birth:</label> <input type="date"
+							id="dateofbirth" th:field="*{dateofbirth}" readonly
+							class="plain-input">
+					</div>
+
+				</form>
+
+				<div>
+					<button id="ViewPrimaryDetail" onclick="viewPrimaryDetailForm()">
+						<i class="fas fa-edit"></i> Edit
+					</button>
+				</div>
+
+			</div>
+			<div class="col-md-6">
+				<form th:object="${employeeAccountDetails}"
+					id="employeeAccountDetailsForm">
+					<h2 style="color: #069">Account Details</h2>
+					<div class="form-group">
+						<label for="empid">Employee ID:</label> <input type="text"
+							id="empid" th:field="*{empid}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="empname">Employee Name:</label> <input type="text"
+							id="empname" th:field="*{empname}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="accountnumber">Account Number:</label> <input
+							type="text" id="accountnumber" th:field="*{accountnumber}"
+							readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="ifsccode">IFSC Code:</label> <input type="text"
+							id="ifsccode" th:field="*{ifsccode}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="bankname">Bank Name:</label> <input type="text"
+							id="bankname" th:field="*{bankname}" readonly class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="pannumber">PAN Number:</label> <input type="text"
+							id="pannumber" th:field="*{pannumber}" readonly
+							class="plain-input">
+					</div>
+					<div class="form-group">
+						<label for="uannumber">UAN Number:</label> <input type="text"
+							id="uannumber" th:field="*{uannumber}" readonly
+							class="plain-input">
+					</div>
+
+
+				</form>
+				<div>
+					<button id="viewAccountDetailForm"
+						onclick="viewAccountDetailForm()">
+						<i class="fas fa-edit"></i> Edit
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="form-container" style="height: 70%;" id="payslipForm"
+		th:style="${payslipformvisibility ? 'visibility: visible;' : 'visibility: hidden;'}">
+
+
+		<div id="errormessage" class="notification-bar" style="display: none;">
+			<p>No Payslip Available.</p>
+			<span class="close-button" onclick="hideNotificationBar()">&times;</span>
+		</div>
+		<div id="successmessage" class="notification-bar"
+			style="display: none;">
+			<p>Payslip generated Successfully!.</p>
+			<span class="close-button" onclick="hideNotificationBar()">&times;</span>
+		</div>
+		<form th:action="@{/paysliprequest}" method="post"
+			th:object="${employee}" id="payslipSelectionForm">
+			<div class="form-group">
+				<h5 style="color: #069">Select Month And Year</h5>
+				<input type="hidden" id="joiningdate" th:field="*{joiningdate}"
+					readonly> <input type="hidden" id="empid"
+					th:field="*{empid}" readonly>
+			</div>
+			<div class="form-group">
+				<select id="monthSelect" name="payslip">
+
+				</select>
+			</div>
+			<button type="submit">Generate PaySlip</button>
+		</form>
+
+
+	</div>
+
+	<div class="form-container" id="payslipViewForm"
+		style="visibility: hidden;">
+		<div class="row">
+			<div class="col-md-8">
+
+				<form th:action="@{/employee}" method="post" th:object="${employee}"
+					id="employeeForm">
+					<h2 style="color: #069">Edit Primary Details</h2>
+					<div class="form-group">
+						<label for="empid">Employee ID</label> <input type="text"
+							id="empid" th:field="*{empid}" readonly>
+					</div>
+					<div class="form-group">
+						<label for="email">Email</label> <input type="email" id="email"
+							th:field="*{email}">
+					</div>
+					<div class="form-group">
+						<label for="name">Name</label> <input type="text" id="name"
+							th:field="*{name}">
+					</div>
+					<div class="form-group">
+						<label for="phoneNumber">Phone Number</label> <input type="text"
+							id="phoneNumber" th:field="*{phonenumber}">
+					</div>
+					<div class="form-group">
+						<label for="address">Address</label>
+						<textarea id="address" th:field="*{address}"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="joiningDate">Joining Date</label> <input type="date"
+							id="joiningDate" th:field="*{joiningdate}">
+					</div>
+					<div class="form-group">
+						<label for="designation">Designation</label> <input type="text"
+							id="designation" th:field="*{designation}">
+					</div>
+					<div class="form-group">
+						<label for="location">Location</label> <input type="text"
+							id="location" th:field="*{location}">
+					</div>
+					<div class="form-group">
+						<label for="companyName">Company Name</label> <input type="text"
+							id="companyName" th:field="*{companyname}">
+					</div>
+					<div class="form-group">
+						<label for="dateofbirth">Date of Birth</label> <input type="date"
+							id="dateofbirth" th:field="*{dateofbirth}">
+					</div>
+
+
+					<button type="submit">
+						Save<i class="fas fa-save"></i>
+					</button>
+				</form>
+				<div>
+					<button id="profileform" onclick="toggleEmployeeForm()"
+						style="margin-top: 10px;">
+						<i class="fas fa-times"></i> Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="form-container" id="ViewAccountDetailForm"
+		style="visibility: hidden;">
+		<div class="row">
+			<div class="col-md-8">
+
+				<form th:action="@{/employeeAccountDetails}" method="post"
+					th:object="${employeeAccountDetails}"
+					id="employeeAccountDetailsForm">
+					<h2 style="color: #069">Edit Account Details</h2>
+					<div class="form-group">
+						<label for="empid">Employee ID</label> <input type="text"
+							id="empid" th:field="*{empid}" readonly>
+					</div>
+					<div class="form-group">
+						<label for="empname">Employee Name</label> <input type="text"
+							id="empname" th:field="*{empname}">
+					</div>
+					<div class="form-group">
+						<label for="accountnumber">Account Number</label> <input
+							type="text" id="accountnumber" th:field="*{accountnumber}">
+					</div>
+					<div class="form-group">
+						<label for="ifsccode">IFSC Code</label> <input type="text"
+							id="ifsccode" th:field="*{ifsccode}">
+					</div>
+					<div class="form-group">
+						<label for="bankname">Bank Name</label> <input type="text"
+							id="bankname" th:field="*{bankname}">
+					</div>
+					<div class="form-group">
+						<label for="pannumber">PAN Number</label> <input type="text"
+							id="pannumber" th:field="*{pannumber}">
+					</div>
+					<div class="form-group">
+						<label for="uannumber">UAN Number</label> <input type="text"
+							id="uannumber" th:field="*{uannumber}">
+					</div>
+
+					<button type="submit">
+						Save<i class="fas fa-save"></i>
+					</button>
+				</form>
+				<div>
+					<button id="profileform" onclick="toggleEmployeeForm()"
+						style="margin-top: 10px;">
+						<i class="fas fa-times"></i> Cancel
+					</button>
+					<br />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		window.onload = function() {
+			generateMonthYearDropdown();
+			var form = document.getElementById("formcontainer");
+			var button = document.getElementById("profileButtonText");
+			var payslipForm = document.getElementById("payslipForm");
+
+			var togglePaySlipButton = document
+					.getElementById("payslipButtonText");
+
+			if (payslipForm.style.visibility === "visible") {
+				togglePaySlipButton.textContent = "Hide Payslip";
+			} else {
+				togglePaySlipButton.textContent = "Payslip";
+			}
+			if (form.style.visibility === "visible") {
+				button.textContent = "Hide Profile";
+			} else {
+				button.textContent = "Profile";
+			}
+		};
+		function hideNotificationBar() {
+			document.querySelector(".notification-bar").style.display = "none";
+		}
+		function logout() {
+
+			window.location.href = '/logout';
+		}
+	</script>
+
+	<script th:if="${paysliperrormessage}" th:inline="javascript">
+		showNotification();
+		payslipFormOnload();
+	</script>
+
+
+</body>
+</html>
