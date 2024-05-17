@@ -12,6 +12,8 @@ public class Users {
 	private String password;
 
 	private String role;
+	
+	private String emailid;
 
 	public String getEmpid() {
 		return empid;
@@ -37,9 +39,21 @@ public class Users {
 		this.role = role;
 	}
 
+	public String getEmailid() {
+		return emailid;
+	}
+
+	public void setEmailid(String emailid) {
+		this.emailid = emailid;
+	}
+
 	@Override
 	public String toString() {
-		return "Users [empid=" + empid + ", password=" + password + ", role=" + role + "]";
+		return "Users [empid=" + empid + ", password=" + password + ", role=" + role + ", emailid=" + emailid + "]";
 	}
+
+	
+
+
 
 }
