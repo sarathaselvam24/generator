@@ -9,4 +9,6 @@ public interface UsersRepository extends JpaRepository<Users, String> {
 
 	Users findByEmpid(String empid);
 
+	Users findByEmailid(String email);
+
 }

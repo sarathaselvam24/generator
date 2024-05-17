@@ -16,4 +16,9 @@ public class UsersRepoService {
 
 	}
 
+	public Users fetchEmailUser(String email) {
+		// TODO Auto-generated method stub
+		return usersRepo.findByEmailid(email);
+	}
+
 }

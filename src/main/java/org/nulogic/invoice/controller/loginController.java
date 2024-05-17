@@ -7,6 +7,8 @@ import org.nulogic.invoice.servic.EmployeeAccountDetailsService;
 import org.nulogic.invoice.servic.EmployeeRepoService;
 import org.nulogic.invoice.servic.UsersRepoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,48 @@ public class loginController {
 	public String loginPage() {
 		return "login";
 	}
+	
+	 @GetMapping("/user")
+	    public String getUser(HttpSession session, @AuthenticationPrincipal OAuth2User oauth2User,Model model) {
+		  System.out.println("oauth2User.getAttributes() email "+oauth2User.getAttributes().get("email"));
+		  
+		  Users user = userService.fetchEmailUser(oauth2User.getAttributes().get("email").toString());
+		
+				if (user.getRole().equalsIgnoreCase("employee")) {
+					Employee employee = employeeRepoService.fetchEmployee(user.getEmpid());
+					EmployeeAccountDetails employeeAccountDetails = employeeAccountDetailsService
+							.fetchEmployeeAccountDetail(user.getEmpid());
+
+					if (employee == null) {
+
+						model.addAttribute("employee", new Employee(user.getEmpid()));
+
+					} else {
+						model.addAttribute("employee", employee);
+					}
+
+					if (employeeAccountDetails == null) {
+						model.addAttribute("employeeAccountDetails", new EmployeeAccountDetails(user.getEmpid()));
+
+					} else {
+						model.addAttribute("employeeAccountDetails", employeeAccountDetails);
+					}
+					model.addAttribute("payslipformvisibility", false);
+					model.addAttribute("paysliperrormessage", false);
+					session.setAttribute("employeeid", user.getEmpid());
+					return "Employee";
+				}
+				if (user.getRole().equalsIgnoreCase("Admin")) {
+
+					return "Admin";
+
+				}
+
+			
+			return "login";
+		
+	    }
+	
 
 	@GetMapping("/onload")
 	public String loadProfile(Model model, HttpSession session) {
