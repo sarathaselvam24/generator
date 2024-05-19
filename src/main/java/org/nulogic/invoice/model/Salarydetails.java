@@ -27,12 +27,13 @@ public class Salarydetails {
 		super();
 	}
 
-	public Salarydetails(BigDecimal basicpay, BigDecimal houseallowance, BigDecimal specialallowance,
+	public Salarydetails(String employeeid, BigDecimal basicpay, BigDecimal houseallowance, BigDecimal specialallowance,
 			BigDecimal otallowance, BigDecimal providentfund, BigDecimal professionaltax, BigDecimal salaryadvance,
 			BigDecimal netpay,BigDecimal payabledays,BigDecimal paidmonth, String month, String year) {
 		super();
 
 		System.out.println("payabledays "+payabledays+" paidmonth "+paidmonth);
+		this.empid=employeeid;
 		this.basicpay = basicpay;
 		this.houseallowance = houseallowance;
 		this.specialallowance = specialallowance;
