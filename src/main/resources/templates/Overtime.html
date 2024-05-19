@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Over Time</title>
+<style>
+body {
+	background-image: url('http://localhost:8080/images/file.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.container {
+	max-width: 600px;
+	margin: 50px auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+form {
+	margin-bottom: 20px;
+}
+
+label {
+	font-weight: bold;
+}
+
+select, input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-sizing: border-box;
+	font-size: 16px;
+}
+
+button {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+.logout-btn {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.logout-btn button {
+	background-color: transparent;
+	border: none;
+	color: #007bff;
+	cursor: pointer;
+}
+
+.logout-btn button:hover {
+	text-decoration: underline;
+}
+</style>
+</head>
+<body>
+	<form th:action="@{/createEmployeeOvertime}" >
+		<div class="form-group">
+			<h2>Basic Employee Details</h2>
+			<label for="empid">Employee ID :</label> 
+			<input type="text"
+				id="empid" name="empid" required>  <label
+				for="email">Email :</label> 
+				<input type="text" id="email"
+				name="emailid" required> 
+				 <label
+				for="month">Month :</label> 
+					<label for="month">Month:</label> <select id="month" name="month">
+					<option value="January">January</option>
+					<option value="February">February</option>
+					<option value="March">March</option>
+					<option value="April">April</option>
+					<option value="May">May</option>
+					<option value="June">June</option>
+					<option value="July">July</option>
+					<option value="August">August</option>
+					<option value="September">September</option>
+					<option value="October">October</option>
+					<option value="November">November</option>
+					<option value="December">December</option>
+				</select> 	<label for="year">Year:</label> <select id="year" name="year">
+					<option value="2020">2020</option>
+					<option value="2021">2021</option>
+					<option value="2022">2022</option>
+					<option value="2023">2023</option>
+					<option value="2024">2024</option>
+					<option value="2025">2025</option>
+					<option value="2026">2026</option>
+					<option value="2027">2027</option>
+					<option value="2028">2028</option>
+					<option value="2029">2029</option>
+					<option value="2030">2030</option>
+
+				</select>
+				 <label
+				for="overtime">OverTime In Hours :</label> 
+				<input type="text"
+				id="overtime" name="overtime" required> 
+
+		<input type="submit" value="Submit">
+			
+
+		</div>
+		</form>
+		  <button onclick="logout()">
+        <span id="logoutButtonText">Logout</span> <i class="fas fa-sign-out-alt"></i>
+    </button>
+    <script>
+        function logout() {
+            window.location.href = '/logout';
+        }
+    </script>
+</body>
+</html>
