@@ -1,14 +1,25 @@
 package org.nulogic.invoice.controller;
-
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
 
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+import org.nulogic.invoice.model.Basicpay;
 import org.nulogic.invoice.model.Employee;
 import org.nulogic.invoice.model.EmployeeAccountDetails;
+import org.nulogic.invoice.model.Loan;
 import org.nulogic.invoice.model.Salarydetails;
+import org.nulogic.invoice.repository.BasicpayRepository;
+import org.nulogic.invoice.repository.LoanRepository;
 import org.nulogic.invoice.servic.EmployeeAccountDetailsService;
 import org.nulogic.invoice.servic.EmployeeRepoService;
 import org.nulogic.invoice.servic.SalarydetailsRepoService;
@@ -56,19 +67,16 @@ public class EmployeeController {
 	
 	@Autowired
     private JavaMailSender emailSender;
+	
+	@Autowired
+	private BasicpayRepository basicRepo;
+
+	@Autowired
+	private LoanRepository loanRepo;
 
 	public TemplateEngine getTemplateEngine() {
 		return templateEngine;
 	}
-
-//	@GetMapping("/employeepage")
-//	public String employeePage(HttpSession session, Model model) {
-//		System.out.println("/employee getmapping");
-//		Object employee = session.getAttribute("employee");
-//		Employee employee1 = employeeRepoService.fetchEmployee(((Employee) employee).getEmpid());
-//		model.addAttribute("employee", employee1);
-//		return "employee";
-//	}
 
 	@PostMapping("/employee")
 	public String saveEmployee(HttpSession session, Employee employee, Model model) {
@@ -229,6 +237,43 @@ public class EmployeeController {
 		}
 
 	}
+	
+	@GetMapping("/loan")
+	public String loan() {
+		return "loan";
+	}
+
+	@GetMapping("/loanrequest")
+	public String saveLoanRequest(HttpSession session, @RequestParam("loanamount") BigDecimal loanamount,
+			@RequestParam("emistartsfrom") String emistartsfrom, @RequestParam("note") String note,
+			@RequestParam("expectedmonth") String expectedmonth,
+			@RequestParam("repaymentterms") BigDecimal paymentterms, @RequestParam("emi") BigDecimal emi) {
+		System.out.println("emistartsfrom " + emistartsfrom);
+		System.out.println(" Employeeid " + session.getAttribute("employeeid"));
+		Loan loanRequest = new Loan();
+		String employeeid = session.getAttribute("employeeid").toString();
+		Basicpay ctcrepo = basicRepo.findByEmpid(employeeid);
+		if (ctcrepo != null) {
+			loanRequest.setEmpid(ctcrepo.getEmpid());
+			loanRequest.setEmailid(ctcrepo.getEmailid());
+			loanRequest
+					.setBasicpay(ctcrepo.getCtc().multiply(((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100))))
+							.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_UP));
+			loanRequest.setLoanamount(loanamount);
+			loanRequest.setExpectedmonth(formatMonthAndYear(expectedmonth));
+			loanRequest.setEmistartsfrom(formatMonthAndYear(emistartsfrom));
+			loanRequest.setNote(note);
+			loanRequest.setIssuedon(Date.valueOf(LocalDate.now()));
+			loanRequest.setLoanrequeststatus("Not Started");
+			loanRequest.setLoanstatus("");
+			loanRequest.setRemainingbalance(loanamount);
+			loanRequest.setRepaymentterms(paymentterms);
+			loanRequest.setRequestedby(employeeRepoService.fetchEmployee(employeeid).getName());
+			loanRequest.setEmi(emi);
+			loanRepo.save(loanRequest);
+		}
+		return "hello";
+	}
 
 	private String generateHtmlContent(Model model) {
 		Context context = new Context();
@@ -271,5 +316,21 @@ public class EmployeeController {
             e.printStackTrace();
         }
     }
+    
+	private Date formatMonthAndYear(String expectedmonth) {
+		try {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+			YearMonth yearMonth = YearMonth.parse(expectedmonth, formatter);
+			LocalDate firstDayOfMonth = yearMonth.atDay(1);
+			Date parseDate = Date.valueOf(firstDayOfMonth);
+			System.out.println("month " + Date.valueOf(firstDayOfMonth));
+			return parseDate;
+		} catch (DateTimeParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
 
 }
