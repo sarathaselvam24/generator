@@ -42,6 +42,8 @@ public class Loan {
 	
 	private String approvedby;
 	
+	private String rejectedby;
+	
 	private BigDecimal emi;
 
 	public int getId() {
@@ -164,6 +166,14 @@ public class Loan {
 		this.approvedby = approvedby;
 	}
 
+	public String getRejectedby() {
+		return rejectedby;
+	}
+
+	public void setRejectedby(String rejectedby) {
+		this.rejectedby = rejectedby;
+	}
+
 	public BigDecimal getEmi() {
 		return emi;
 	}
@@ -178,10 +188,10 @@ public class Loan {
 				+ ", loanamount=" + loanamount + ", expectedmonth=" + expectedmonth + ", emistartsfrom=" + emistartsfrom
 				+ ", repaymentterms=" + repaymentterms + ", requestedby=" + requestedby + ", loanrequeststatus="
 				+ loanrequeststatus + ", issuedon=" + issuedon + ", note=" + note + ", remainingbalance="
-				+ remainingbalance + ", loanstatus=" + loanstatus + ", approvedby=" + approvedby + ", emi=" + emi + "]";
+				+ remainingbalance + ", loanstatus=" + loanstatus + ", approvedby=" + approvedby + ", rejecteddby="
+				+ rejectedby + ", emi=" + emi + "]";
 	}
 
 	
-
 
 }

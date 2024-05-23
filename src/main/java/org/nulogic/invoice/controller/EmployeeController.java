@@ -265,7 +265,7 @@ public class EmployeeController {
 			loanRequest.setNote(note);
 			loanRequest.setIssuedon(Date.valueOf(LocalDate.now()));
 			loanRequest.setLoanrequeststatus("Not Started");
-			loanRequest.setLoanstatus("");
+			loanRequest.setLoanstatus("Pending");
 			loanRequest.setRemainingbalance(loanamount);
 			loanRequest.setRepaymentterms(paymentterms);
 			loanRequest.setRequestedby(employeeRepoService.fetchEmployee(employeeid).getName());
