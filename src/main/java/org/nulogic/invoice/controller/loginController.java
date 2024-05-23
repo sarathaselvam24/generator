@@ -75,7 +75,7 @@ public class loginController {
 					return "Employee";
 				}
 				if (user.getRole().equalsIgnoreCase("Admin")) {
-
+					session.setAttribute("admin_email_id", user.getEmailid());
 					return "Admin";
 
 				}

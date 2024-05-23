@@ -31,8 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class AdminLoginController {
@@ -70,7 +73,7 @@ public class AdminLoginController {
 	UsersRepository userRepo;
 	
 	@GetMapping("/admin")
-	public String admin() {
+	public String admin(HttpSession session) {
 		return "Admin";
 	}
 	
@@ -113,6 +116,46 @@ public class AdminLoginController {
 		overTimeRepo.save(overtime);
 	}
 	
+	@GetMapping("/employeeLoanRequest")
+	public String viewEmployeeLoanRequest(Model model) {
+		List<Loan> loanreq = loanrepo.findAll();
+		
+		System.out.println("loanreq admin "+loanreq.toString());
+		model.addAttribute("loanreq", loanreq);
+		return "viewLoanRequest";
+	}
+	
+	@GetMapping("/editLoanStatus/{id}/{status}")
+	public String editLoanStatus(HttpSession session,@PathVariable("id") int id, @PathVariable("status") String status, Model model) {
+	    Loan loan = loanrepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid loan Id:" + id));
+	    
+	    loan.setLoanstatus(status);
+	    if(status.equalsIgnoreCase("approved")) {
+	    	loan.setApprovedby(session.getAttribute("admin_email_id").toString());
+	    }else if(status.equalsIgnoreCase("rejected")) {
+	    	loan.setRejectedby(session.getAttribute("admin_email_id").toString());
+	    }
+	    loanrepo.save(loan);
+	    return "redirect:/employeeLoanRequest";
+	}
+	
+	@GetMapping("/searchEmployeeLoanRequest")
+	public String viewEmployeeLoanRequest(@RequestParam(name = "search", required = false) String search, Model model) {
+	    List<Loan> loanreq;
+	    if (search == null || search.isEmpty()) {
+	        loanreq = loanrepo.findAll();
+	    } else {
+	        loanreq = loanrepo.findByEmpidContainingOrLoanstatusContaining(search, search);
+	    }
+	    model.addAttribute("loanreq", loanreq);
+	    model.addAttribute("search", search);
+	    
+	    System.out.println("loanreq admin " + loanreq.toString());
+	    return "viewLoanRequest";
+	}
+
+
+
 	
 	@PostMapping("/createEmployee")
 	public String createEmployeeDetails(Model model, Employee employee, EmployeeAccountDetails accountdetails, Basicpay basicpay)

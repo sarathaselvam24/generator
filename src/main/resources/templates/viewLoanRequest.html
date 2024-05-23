@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Loan Requests</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Loan Requests</h1>
+      <form th:action="@{/searchEmployeeLoanRequest}" method="get">
+        <input type="text" name="search" placeholder="Search by Emp ID or Status" th:value="${search}" />
+        <button type="submit">Search</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Emp ID</th>
+                <th>Loan Amount</th>
+                <th>Expected Month</th>
+                <th>EMI Starts From</th>
+                <th>Repayment Terms</th>
+                <th>Requested By</th>
+                <th>Loan Request Status</th>
+                <th>Issued On</th>
+                <th>Note</th>
+                <th>Loan Status</th>
+                <th>Approved By</th>
+                 <th>Requested By</th>
+                <th>EMI</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="loan : ${loanreq}">
+                <td th:text="${loan.empid}"></td>
+                <td th:text="${loan.loanamount}"></td>
+                <td th:text="${loan.expectedmonth}"></td>
+                <td th:text="${loan.emistartsfrom}"></td>
+                <td th:text="${loan.repaymentterms}"></td>
+                <td th:text="${loan.requestedby}"></td>
+                <td th:text="${loan.loanrequeststatus}"></td>
+                <td th:text="${loan.issuedon}"></td>
+                <td th:text="${loan.note}"></td>
+                <td>
+                    <span th:if="${loan.loanstatus} == 'Pending'">
+                        <button th:onclick="'editLoanStatus(' + ${loan.id} + ', \'Approved\')'">Approve</button>
+                        <button th:onclick="'editLoanStatus(' + ${loan.id} + ', \'Rejected\')'">Reject</button>
+                    </span>
+                    <span th:if="${loan.loanstatus} != 'Pending'" th:text="${loan.loanstatus}"></span>
+                </td>
+                <td th:text="${loan.approvedby}"></td>
+                <td th:text="${loan.rejectedby}"></td>
+                <td th:text="${loan.emi}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function editLoanStatus(loanId, status) {
+            // Redirect to the edit loan status page with the new status
+            window.location.href = '/editLoanStatus/' + loanId + '/' + status;
+        }
+    </script>
+</body>
+</html>
