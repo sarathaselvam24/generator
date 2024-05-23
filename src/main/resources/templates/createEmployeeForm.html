@@ -2,139 +2,126 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<meta charset="UTF-8">
-<title>Employee Form</title>
-<style>
-body {
-	font-family: Arial, sans-serif;
-	background-color: #f4f4f4;
-	margin: 0;
-	padding: 0;
-}
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<meta charset="UTF-8">
+	<title>Employee Form</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			margin: 0;
+			padding: 0;
+		}
 
-body {
-	background-image: url('http://localhost:8080/images/file.png');
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-size: cover;
-}
+		body {
+			background-image: url('http://localhost:8080/images/file.png');
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			background-size: cover;
+		}
 
-form {
-	max-width: 800px;
-	margin: 20px auto;
-	background-color: #fff;
-	padding: 20px;
-	border-radius: 8px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+		form {
+			max-width: 800px;
+			margin: 20px auto;
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
 
-h2 {
-	color: #333;
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 10px;
-	margin-bottom: 20px;
-}
+		h2 {
+			color: #333;
+			border-bottom: 1px solid #ccc;
+			padding-bottom: 10px;
+			margin-bottom: 20px;
+		}
 
-.form-group {
-	margin-bottom: 20px;
-}
+		.form-group {
+			margin-bottom: 20px;
+		}
 
-.form-group label {
-	display: block;
-	margin-bottom: 5px;
-	font-weight: bold;
-}
+		.form-group label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+		}
 
-.form-group input {
-	width: calc(50% - 10px);
-	/* 50% width with some spacing between fields */
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	box-sizing: border-box;
-	margin-right: 10px;
-	margin-bottom: 10px;
-	display: inline-block;
-}
+		.form-group input {
+			width: calc(50% - 10px);
+			/* 50% width with some spacing between fields */
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+			margin-right: 10px;
+			margin-bottom: 10px;
+			display: inline-block;
+		}
 
-.form-group input:last-child {
-	margin-right: 0;
-	/* Remove margin-right for the last input in a row */
-}
+		.form-group input:last-child {
+			margin-right: 0;
+			/* Remove margin-right for the last input in a row */
+		}
 
-input[type="submit"] {
-	background-color: #4caf50;
-	color: white;
-	padding: 15px 20px;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 16px;
-}
+		input[type="submit"] {
+			background-color: #4caf50;
+			color: white;
+			padding: 15px 20px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+		}
 
-input[type="submit"]:hover {
-	background-color: #45a049;
-}
-</style>
+		input[type="submit"]:hover {
+			background-color: #45a049;
+		}
+	</style>
 </head>
 
 <body>
 	<form th:action="@{/createEmployee}" method="post">
 		<div class="form-group">
 			<h2>Basic Employee Details</h2>
-			<label for="empid">Employee ID :</label> <input type="text"
-				id="empid" name="empid" required> <label for="name">Name
-				:</label> <input type="text" id="name" name="name" required> <label
-				for="email">Email :</label> <input type="text" id="email"
-				name="email" required> <label for="phonenumber">Phone
-				Number :</label> <input type="text" id="phonenumber" name="phonenumber"
-				required> <label for="address">Address :</label>
+			<label for="empid">Employee ID :</label> <input type="text" id="empid" name="empid" required> <label
+				for="name">Name
+				:</label> <input type="text" id="name" name="name" required> <label for="email">Email :</label> <input
+				type="text" id="email" name="email" required> <label for="phonenumber">Phone
+				Number :</label> <input type="text" id="phonenumber" name="phonenumber" required> <label
+				for="address">Address :</label>
 			<textarea id="address" name="address" required></textarea>
 
-			<label for="joiningdate">Joining Date :</label> <input type="date"
-				id="joiningdate" name="joiningdate" required> <label
-				for="designation">Designation :</label> <input type="text"
-				id="designation" name="designation" required> <label
-				for="location">Location :</label> <input type="text" id="location"
+			<label for="joiningdate">Joining Date :</label> <input type="date" id="joiningdate" name="joiningdate"
+				required> <label for="designation">Designation :</label> <input type="text" id="designation"
+				name="designation" required> <label for="location">Location :</label> <input type="text" id="location"
 				name="location" required> <label for="companyname">Company
-				Name :</label> <input type="text" id="companyname" name="companyname"
-				required> <label for="dateofbirth">Date of Birth :</label> <input
-				type="date" id="dateofbirth" name="dateofbirth" required>
+				Name :</label> <input type="text" id="companyname" name="companyname" required> <label
+				for="dateofbirth">Date of Birth :</label> <input type="date" id="dateofbirth" name="dateofbirth"
+				required>
 
 		</div>
 
 		<div class="form-group">
 			<h2>Employee Account Details</h2>
 
-			<label for="accountnumber">Bank Account Number :</label> <input
-				type="text" id="accountnumber" name="accountnumber" required>
+			<label for="accountnumber">Bank Account Number :</label> <input type="text" id="accountnumber"
+				name="accountnumber" required>
 
-			<label for="ifsccode">IFSC Code :</label> <input type="text"
-				id="ifsccode" name="ifsccode" required> <label
-				for="bankname">Bank Name :</label> <input type="text" id="bankname"
-				name="bankname" required> <label for="pannumber">PAN
+			<label for="ifsccode">IFSC Code :</label> <input type="text" id="ifsccode" name="ifsccode" required> <label
+				for="bankname">Bank Name :</label> <input type="text" id="bankname" name="bankname" required> <label
+				for="pannumber">PAN
 				Number :</label> <input type="text" id="pannumber" name="pannumber" required>
 
-			<label for="uannumber">UAN Number :</label> <input type="text"
-				id="uannumber" name="uannumber" required>
+			<label for="uannumber">UAN Number :</label> <input type="text" id="uannumber" name="uannumber" required>
 		</div>
 
 		<div class="form-group">
 			<h2>Employee Salary Details</h2>
-
-			<label for="basicpay">Basic Pay :</label> <input type="number"
-				id="basicpay" name="basicpay" required> <label
-				for="houseallowance">House Allowance :</label> <input type="number"
-				id="houseallowance" name="houseallowance" required> <label
-				for="bankname">Special Allowance :</label> <input type="number"
-				id="specialallowance" name="specialallowance" required> <label
-				for="providentfund">Provident Fund :</label> <input type="number"
-				id="providentfund" name="providentfund" required> <label
-				for="shift">Select Shift:</label> <select id="shift" name="shift">
+			<label for="ctc">CTC (Cost To Company):</label><br>
+			<input type="number" id="ctc" name="ctc"><br><br>
+			<label for="shift">Select Shift:</label>
+			<select id="shift" name="shift">
 				<option value="general">General</option>
 				<option value="night">Night</option>
 			</select>
@@ -143,13 +130,12 @@ input[type="submit"]:hover {
 	</form>
 	<div>
 		<button>
-			<span id="logoutButtonText" onclick="logout()">Logout</span> <i
-				class="fas fa-user"></i>
+			<span id="logoutButtonText" onclick="logout()">Logout</span> <i class="fas fa-user"></i>
 		</button>
 	</div>
 
 	<script>
- 	function logout() {
+		function logout() {
 
 			window.location.href = '/logout';
 		}

@@ -107,6 +107,7 @@ public class AdminLoginController {
 	@PostMapping("/createEmployee")
 	public String createEmployeeDetails(Model model, Employee employee, EmployeeAccountDetails accountdetails, Basicpay basicpay)
 	{
+		System.out.println(basicpay.getCtc());
 		System.out.println("EMP id " + employee.getEmpid());
 		System.out.println("EMP id email " + employee.getEmail());
 		System.out.println("EMP id default " + "NUIT");
@@ -222,62 +223,116 @@ public class AdminLoginController {
 	 * return "hello"; }
 	 */
 	
-	
 	@GetMapping("/generatePayslip")
-	public String generatePaySlipinDB(@RequestParam("month") String month, @RequestParam("year") String year,@RequestParam("payabledays") BigDecimal payabledays,@RequestParam("paidmonth") BigDecimal paidmonth, Model model) {
-	System.out.println("year " + month +" "+ year);
+	public String generatePaySlipinDB(@RequestParam("month") String month, @RequestParam("year") String year,
+			@RequestParam("payabledays") BigDecimal payabledays, @RequestParam("paidmonth") BigDecimal paidmonth,
+			Model model) {
+		System.out.println("year " + month + " " + year);
 //	List<Employee> emp = empRepo.findAll();
-	List<Basicpay> emp = basicpayRepo.findAll();
-	System.out.println("emp "+emp.toString());
-	for(Basicpay employee : emp)
-	{System.out.println("employee size "+emp.size());
-		System.out.println("employee.toString "+employee.toString());
-		Salarydetails details = null;
-		String empId=employee.getEmpid();
+		List<Basicpay> emp = basicpayRepo.findAll();
+		System.out.println("emp " + emp.toString());
+		for (Basicpay employee : emp) {
+			System.out.println("employee size " + emp.size());
+			System.out.println("employee.toString " + employee.toString());
+			Salarydetails details = null;
+			String empId = employee.getEmpid();
 //		Basicpay salaryDetails = basicpayRepo.findByEmpid(empId);
 //		System.out.println("salaryDetails.tostring "+salaryDetails.toString());
+			Salarydetails sal = salaryRepo.findByPayslip(month, year, empId);
+			if (sal != null) {
+				BigDecimal basicpay = employee.getCtc()
+						.multiply((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100)));
+				basicpay = basicpay.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
+						RoundingMode.HALF_UP);
+				BigDecimal nightshift = BigDecimal.valueOf(0);
+				BigDecimal providentFund = BigDecimal.valueOf(0);
+				BigDecimal houseAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
+				BigDecimal specialAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
+				if (employee.getShift().equalsIgnoreCase("Night")) {
+					nightshift = paidmonth.multiply(BigDecimal.valueOf(200));
+				}
+				BigDecimal professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+				if (month.equalsIgnoreCase("January")) {
+					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+				}
+				if (month.equalsIgnoreCase("June")) {
+					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+				}
+				details = new Salarydetails(sal.getEmpid(), sal.getBasicpay(), sal.getHouseallowance(),
+						sal.getSpecialallowance(), nightshift, providentFund, professionalTex, BigDecimal.ZERO,
+						BigDecimal.ZERO, payabledays, paidmonth, month, year);
+				sal.setBasicpay(details.getBasicpay());
+				sal.setHouseallowance(details.getHouseallowance());
+				sal.setSpecialallowance(details.getSpecialallowance());
+				sal.setOtallowance(details.getOtallowance());
+				sal.setProvidentfund(details.getProvidentfund());
+				sal.setProfessionaltax(details.getProfessionaltax());
+				sal.setSalaryadvance(details.getSalaryadvance());
+				sal.setPayabledays(details.getPayabledays());
+				sal.setPaidmonth(details.getPaidmonth());
+				sal.setNetpay(details.getNetpay());
+				sal.setDeduction(details.getDeduction());
+				sal.setTotal(details.getTotal());
+				salaryRepo.save(sal);
+				model.addAttribute("msg", "Pay Slip Generated successfully");
+				return "hello";
+			} else {
+				System.out.println("salaryDetails empId " + empId);
+				System.out.println("employee.toString " + employee.toString());
+				System.out.println("employee.getCtc " + employee.getCtc());
+				BigDecimal basicpay = employee.getCtc()
+						.multiply((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100)));
+				System.out.println("basicpay 1 " + basicpay);
+				basicpay = basicpay.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
+						RoundingMode.HALF_UP);
+				System.out.println("basicpay 2 " + basicpay);
+				BigDecimal nightshift = BigDecimal.valueOf(0);
+				BigDecimal providentFund = BigDecimal.valueOf(0);
+				BigDecimal houseAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
+				BigDecimal specialAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
+				if (employee.getShift().equalsIgnoreCase("Night")) {
+					nightshift = paidmonth.multiply(BigDecimal.valueOf(200));
+				}
+				BigDecimal professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+				if (month.equalsIgnoreCase("January")) {
+					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+				}
+				if (month.equalsIgnoreCase("June")) {
+					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+				}
+				details = new Salarydetails(empId, basicpay, houseAllowance, specialAllowance, nightshift,
+						providentFund, professionalTex, BigDecimal.ZERO, BigDecimal.ZERO, payabledays, paidmonth, month,
+						year);
+				salaryRepo.save(details);
+				model.addAttribute("msg", "Pay Slip Generated successfully");
+			}
 
-		System.out.println("salaryDetails empId "+empId);
-		System.out.println("employee.toString "+employee.toString());
-		System.out.println("employee.getCtc "+employee.getCtc());
-		BigDecimal basicpay = employee.getCtc().multiply((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100)));
-		System.out.println("basicpay 1 "+basicpay);
-		 basicpay = basicpay.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_UP);
-		 System.out.println("basicpay 2 "+basicpay);
-		BigDecimal nightshift = BigDecimal.valueOf(0);
-		BigDecimal providentFund = BigDecimal.valueOf(0);
-		BigDecimal houseAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
-		BigDecimal specialAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
-		if(employee.getShift().equalsIgnoreCase("Night")){
-			nightshift = paidmonth.multiply(BigDecimal.valueOf(1000));
-		}
-		BigDecimal professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
-		if(month.equalsIgnoreCase("January")) {
-			providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
-		}
-		if(month.equalsIgnoreCase("June")) {
-			providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
-		}
-			 details = new Salarydetails(empId,basicpay,houseAllowance,specialAllowance,nightshift,providentFund,professionalTex,BigDecimal.ZERO,BigDecimal.ZERO,payabledays,paidmonth,month,year);
-		
 //		Salarydetails details = new Salarydetails();
-		
+
 //		details.setEmpid(empId);
 //		details.setPayslipmonth(month);
 //		details.setPayslipyear(year);
 //		details.setBasicpay(salaryDetails.getBasicpay());
 //		details.setHouseallowance(salaryDetails.getHouseallowance());
 //		details.setSpecialallowance(salaryDetails.getSpecialallowance());
-		
+
 //		details.setSalaryadvance(BigDecimal.ZERO);
 //		details.setProvidentfund(salaryDetails.getProvidentfund());
 //		details.setProfessionaltax(BigDecimal.ZERO);
-		System.out.println("details "+details.toString());
-		salaryRepo.save(details);	
-	
+			
+		}
+		return "hello";
 	}
 	
-	model.addAttribute("msg", "Pay Slip Generated successfully");
-	return "hello";
+	@GetMapping("/test")
+	public String exist()
+	{
+		String	year = "2020";
+		String month = "January";
+		String empid ="NUIT010";
+		System.out.println(empid + month + year);
+		Salarydetails sal = salaryRepo.findByPayslip(month, year, empid);
+		return "errorPage";
+		
 	}
 }
