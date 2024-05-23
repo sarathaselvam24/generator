@@ -54,9 +54,11 @@ public class Salarydetails {
         System.out.println("calculateLossOfDay "+calculateLossOfDay);
         BigDecimal dayPay = netpay.divide(this.payabledays, MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_UP);
         System.out.println("dayPay "+dayPay);
-		this.netpay = netpay.subtract(dayPay.multiply(calculateLossOfDay));
+        netpay = netpay.subtract(dayPay.multiply(calculateLossOfDay));
+		BigDecimal	deduction = providentfund.add(professionaltax).add(salaryadvance);
+		this.netpay = netpay.subtract(deduction);
 		 System.out.println("this.netpay "+this.netpay);
-		 this.deduction = providentfund.add(professionaltax);
+		 this.deduction = deduction;
      
 	}
 

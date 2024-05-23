@@ -7,6 +7,9 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+	rel="stylesheet">	
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -352,6 +355,11 @@ body {
 		}, 5000);
 	}
 </script>
+<script>
+        function toggleloanForm() {
+            window.location.href = '/loan';
+        }
+    </script>
 </head>
 <body>
 	<div class="vertical-container"
@@ -366,6 +374,11 @@ body {
 				<span id="payslipButtonText">Payslip</span><i
 					class="fas fa-file-invoice-dollar"></i>
 			</button>
+		</div>
+		<div>
+			<button id="toggleloanButton" onclick="toggleloanForm()">
+			<span id="loanButtonText">Loan</span> <i class="bi bi-cash"></i>
+		</button>
 		</div>
 		<div>
 			<button>

@@ -213,11 +213,11 @@ th {
 						<b>Salary Details</b>
 					</caption>
 					<tr  style="border: 1px solid black;">
-						<th style="font-weight: bold;text-align:center">Head</th>
-						<td style="font-weight: bold;text-align:center" >Earning</td>
+						<th style="font-weight: bold;">Head</th>
+						<td style="font-weight: bold;" >Earning</td>
 						<td class="separator"></td>
-			<th style="font-weight: bold;text-align:center">Head</th>
-						<td style="font-weight: bold;text-align:center">Deduction</td>
+			<th style="font-weight: bold;">Head</th>
+						<td style="font-weight: bold;">Deduction</td>
 					</tr>
 					<tr>
 						<th>Basic Pay</th>
@@ -238,28 +238,17 @@ th {
 						<th>Special Allowance</th>
 						<td th:text="*{salarydetails.specialallowance}"></td>
 							<td class="separator"></td>
+							<th>Salary Advance</th>
+						<td th:text="*{salarydetails.salaryadvance}"></td>
+							
 					</tr>
 					<tr>
 						<th>OT Allowance</th>
 						<td th:text="*{salarydetails.otallowance}"></td>
 							<td class="separator"></td>
 					</tr>
-					<tr>
-						<th>Provident Fund</th>
-						<td th:text="*{salarydetails.providentfund}"></td>
-						<td class="separator"></td>
-					</tr>
-					<tr>
-						<th>Professional Tax:</th>
-						<td th:text="*{salarydetails.professionaltax}"></td>
-							<td class="separator"></td>
-					</tr>
-					<tr>
-						<th>Salary Advance</th>
-						<td th:text="*{salarydetails.salaryadvance}"></td>
-							<td class="separator"></td>
-							
-					</tr>
+					
+					
 					<tr>
 						<th  style="font-weight: bold;border: 1px solid black;">Total</th>
 						<td  style="font-weight: bold;border: 1px solid black;" th:text="*{salarydetails.total}"></td>
