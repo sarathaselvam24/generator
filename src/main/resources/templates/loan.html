@@ -1,284 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Application Form</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
-	rel="stylesheet">
-<style>
-body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	background-color: #f4f4f4;
-}
-
-.form-container {
-	background-color: #fff;
-	padding: 20px;
-	border-radius: 8px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	width: 600px;
-	padding-top: 30px; /* Added padding to the top */
-}
-
-.form-container h2 {
-	margin-bottom: 20px;
-	margin-top: 10px; /* Increased margin from the top */
-	font-size: 28px;
-	text-align: center;
-	overflow: visible;
-}
-
-.form-group {
-	margin-bottom: 10px;
-}
-
-.form-group label {
-	display: block;
-	margin-bottom: 5px;
-	font-weight: bold;
-}
-
-.form-group input, .form-group select {
-	width: 100%;
-	padding: 6px;
-	margin-bottom: 5px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	box-sizing: border-box;
-	font-size: 14px;
-}
-
-.form-group input[type="date"] {
-	padding: 5px;
-}
-
-.form-group button {
-	width: 100%;
-	padding: 8px;
-	background-color: #28a745;
-	border: none;
-	color: #fff;
-	font-size: 16px;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-.form-group button:hover {
-	background-color: #218838;
-}
-
-.icon {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	justify-content: center;
-}
-
-.error-message {
-	color: red;
-}
-
-.form-group input[readonly] {
-	color: #6c757d;
-	background-color: #f8f9fa;
-}
-
-.disabled-background {
-	background-color: #f8f9fa;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            padding-top: 30px;
+        }
+        .form-container h2 {
+            margin-bottom: 20px;
+            margin-top: 10px;
+            font-size: 28px;
+            text-align: center;
+            overflow: visible;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 6px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .form-group input[type="date"] {
+            padding: 5px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 8px;
+            background-color: #28a745;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #218838;
+        }
+        .icon {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .error-message {
+            color: red;
+        }
+         .notification-message {
+            color: white;
+            background-color: #28a745;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
 </head>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    populateMonths();
-
-    document.getElementById('expectedmonth').addEventListener('change', function() {
-        updateEMIDropdown();
-        toggleBackgroundColor(); 
-    });
-
-   
-    toggleBackgroundColor();
-});
-function updateEMIDropdown() {
-    var expectedMonthSelect = document.getElementById('expectedmonth');
-    var emiStartsFromSelect = document.getElementById('emistartsfrom');
-
-    emiStartsFromSelect.innerHTML = '';
-
-    var selectedMonth = expectedMonthSelect.value.split(' ')[0];
-    var selectedYear = parseInt(expectedMonthSelect.value.split(' ')[1]);
-
-    var months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    var placeholderOption = document.createElement('option');
-    placeholderOption.text = 'Select Month';
-    placeholderOption.disabled = true;
-    emiStartsFromSelect.add(placeholderOption);
-
-    if (selectedMonth !== "" && !isNaN(selectedYear)) {
-        
-        var startIndex = months.indexOf(selectedMonth);
-
-        for (var i = startIndex; i <= startIndex + 1; i++) {
-            var index = i % 12;
-            var year = selectedYear;
-            if (index === 0 && i !== startIndex) {
-                year++; 
-            }
-            var option = document.createElement('option');
-            option.text = months[index] + ' ' + year;
-            emiStartsFromSelect.add(option);
-        }
-
-        emiStartsFromSelect.disabled = false;
-    } else {
-        emiStartsFromSelect.disabled = true;
-    }
-}
-
-function populateMonths() {
-    var select = document.getElementById('expectedmonth');
-    var currentMonth = new Date().getMonth();
-    var currentYear = new Date().getFullYear();
-    var months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    for (var i = currentMonth; i < 12; i++) {
-        var option = document.createElement('option');
-        option.text = months[i] + ' ' + currentYear;
-        select.add(option);
-    }
-
-    for (var i = 0; i < 4; i++) { 
-        var option = document.createElement('option');
-        option.text = months[i] + ' ' + (currentYear + 1);
-        select.add(option);
-    }
-
-    updateEMIDropdown();
-}
-
-
-function calculateEMI() {
-    var loanAmountInput = document.getElementById('loanamount');
-    var repaymentInput = document.getElementById('repaymentterms');
-    var emiInput = document.getElementById('emi');
-
-    var loanAmount = parseFloat(loanAmountInput.value);
-    var repaymentValue = parseInt(repaymentInput.value);
-
-    console.log("Loan Amount:", loanAmount);
-    console.log("Repayment Terms:", repaymentValue);
-
-    if (!isNaN(loanAmount) && !isNaN(repaymentValue) && repaymentValue > 0) {
-        var emi = loanAmount / repaymentValue;
-        emiInput.value = emi.toFixed(2);
-    } else {
-        emiInput.value = ""; 
-    }
-}
-
-
-function validateForm() {
-    var repaymentInput = document.getElementById('repaymentterms');
-    var repaymentValue = parseInt(repaymentInput.value);
-    var errorDiv = document.getElementById('repaymentterms-error');
-
-    if (repaymentValue < 1 || repaymentValue > 6) {
-        errorDiv.textContent = "Repayment terms must be between 1 and 6.";
-        repaymentInput.value = "";
-    } else {
-        errorDiv.textContent = "";
-    }
-
-    calculateEMI(); 
-}
-
-    function toggleBackgroundColor() {
-        var expectedMonthSelect = document.getElementById('expectedmonth');
-        var emiStartsFromSelect = document.getElementById('emistartsfrom');
-
-        if (expectedMonthSelect.value === "") {
-            emiStartsFromSelect.style.backgroundColor = "#f8f9fa"; 
-        } else {
-            emiStartsFromSelect.style.backgroundColor = ""; 
-        }
-    }
-
-</script>
-
-
 <body>
-	<div class="form-container">
-		<h2 class="icon">
-			<i class="bi bi-cash"></i> Loan Application Form
-		</h2>
-		<form action="/loanrequest" method="get">
-			<div class="row">
-				<div class="col-md-6">
-
-					<div class="form-group">
-						<label for="loanamount">Loan Amount</label> <input type="number"
-							id="loanamount" name="loanamount" onchange="calculateEMI()"
-							required>
-					</div>
-					<div class="form-group">
-						<label for="emistartsfrom">EMI Starts From</label> <select
-							id="emistartsfrom" name="emistartsfrom" required disabled>
-							<option value="" disabled selected>Select Month</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label for="note">Note</label> <input type="text" id="note"
-							name="note">
-					</div>
-
-				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="expectedmonth">Expected Month</label> <select
-							id="expectedmonth" name="expectedmonth" required>
-							<option value="" disabled selected>Select Month</option>
-							<!-- JavaScript will populate this -->
-						</select>
-					</div>
-
-					<div class="form-group">
-						<label for="repaymentterms">Repayment Terms (1-6)</label> <input
-							type="number" id="repaymentterms" name="repaymentterms"
-							onchange="validateForm()" min="1" max="6" required>
-						<div id="repaymentterms-error" class="error-message"></div>
-						<!-- Error message container -->
-					</div>
-					<div class="form-group">
-						<label for="emi">EMI (per month)</label> <input type="text"
-							id="emi" name="emi" readonly>
-					</div>
-
-				</div>
-			</div>
-			<div class="form-group">
-				<button type="submit">Submit</button>
-			</div>
-		</form>
-	</div>
-
+    <div class="form-container">
+        <h2 class="icon">
+            <i class="bi bi-cash"></i> Loan Application Form
+        </h2>
+        <a class="button view" href="/myLoanHistory">Loan History</a>
+        <div id="notification-bar" class="notification-message">
+            <!-- Notification message will be displayed here if present -->
+            <span th:text="${notification}"></span>
+        </div>
+        <form action="/loanrequest" method="get">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="loanamount">Loan Amount</label> <input type="number" id="loanamount" name="loanamount" onchange="calculateEMI()" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emistartsfrom">EMI Starts From</label> <select id="emistartsfrom" name="emistartsfrom" required disabled>
+                            <option value="" disabled selected>Select Month</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="note">Note</label> <input type="text" id="note" name="note">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="expectedmonth">Expected Month</label> <select id="expectedmonth" name="expectedmonth" required>
+                            <option value="" disabled selected>Select Month</option>
+                            <!-- JavaScript will populate this -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="repaymentterms">Repayment Terms (1-6)</label> <input type="number" id="repaymentterms" name="repaymentterms" onchange="validateForm()" min="1" max="6" required>
+                        <div id="repaymentterms-error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="emi">EMI (per month)</label> <input type="text" id="emi" name="emi" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        	   const notificationBar = document.getElementById('notification-bar');
+               if (notificationBar.textContent.trim() !== "") {
+                   notificationBar.style.display = 'block';
+                   setTimeout(function() {
+                       notificationBar.style.display = 'none';
+                   }, 3000); // Hide after 1 minute (60000 milliseconds)
+               }
+            populateMonths();
+            document.getElementById('expectedmonth').addEventListener('change', function() {
+                updateEMIDropdown();
+                toggleBackgroundColor();
+            });
+            toggleBackgroundColor();
+        });
+        function updateEMIDropdown() {
+            var expectedMonthSelect = document.getElementById('expectedmonth');
+            var emiStartsFromSelect = document.getElementById('emistartsfrom');
+            emiStartsFromSelect.innerHTML = '';
+            var selectedMonth = expectedMonthSelect.value.split(' ')[0];
+            var selectedYear = parseInt(expectedMonthSelect.value.split(' ')[1]);
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var placeholderOption = document.createElement('option');
+            placeholderOption.text = 'Select Month';
+            placeholderOption.disabled = true;
+            emiStartsFromSelect.add(placeholderOption);
+            if (selectedMonth !== "" && !isNaN(selectedYear)) {
+                var startIndex = months.indexOf(selectedMonth);
+                for (var i = startIndex; i <= startIndex + 1; i++) {
+                    var index = i % 12;
+                    var year = selectedYear;
+                    if (index === 0 && i !== startIndex) {
+                        year++;
+                    }
+                    var option = document.createElement('option');
+                    option.text = months[index] + ' ' + year;
+                    emiStartsFromSelect.add(option);
+                }
+                emiStartsFromSelect.disabled = false;
+            } else {
+                emiStartsFromSelect.disabled = true;
+            }
+        }
+        function populateMonths() {
+            var select = document.getElementById('expectedmonth');
+            var currentMonth = new Date().getMonth();
+            var currentYear = new Date().getFullYear();
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            for (var i = currentMonth; i < 12; i++) {
+                var option = document.createElement('option');
+                option.text = months[i] + ' ' + currentYear;
+                select.add(option);
+            }
+            for (var i = 0; i < 4; i++) {
+                var option = document.createElement('option');
+                option.text = months[i] + ' ' + (currentYear + 1);
+                select.add(option);
+            }
+            updateEMIDropdown();
+        }
+        function calculateEMI() {
+            var loanAmountInput = document.getElementById('loanamount');
+            var repaymentInput = document.getElementById('repaymentterms');
+            var emiInput = document.getElementById('emi');
+            var loanAmount = parseFloat(loanAmountInput.value);
+            var repaymentValue = parseInt(repaymentInput.value);
+            if (!isNaN(loanAmount) && !isNaN(repaymentValue) && repaymentValue > 0) {
+                var emi = loanAmount / repaymentValue;
+                emiInput.value = emi.toFixed(2);
+            } else {
+                emiInput.value = "";
+            }
+        }
+        function validateForm() {
+            var repaymentInput = document.getElementById('repaymentterms');
+            var repaymentValue = parseInt(repaymentInput.value);
+            var errorDiv = document.getElementById('repaymentterms-error');
+            if (repaymentValue < 1 || repaymentValue > 6) {
+                errorDiv.textContent = "Repayment terms must be between 1 and 6.";
+                repaymentInput.value = "";
+            } else {
+                errorDiv.textContent = "";
+            }
+            calculateEMI();
+        }
+        function toggleBackgroundColor() {
+            var expectedMonthSelect = document.getElementById('expectedmonth');
+            var emiStartsFromSelect = document.getElementById('emistartsfrom');
+            if (expectedMonthSelect.value === "") {
+                emiStartsFromSelect.style.backgroundColor = "#f8f9fa";
+            } else {
+                emiStartsFromSelect.style.backgroundColor = "";
+            }
+        }
+    </script>
 </body>
 </html>

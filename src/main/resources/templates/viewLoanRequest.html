@@ -38,7 +38,8 @@
                 <th>Note</th>
                 <th>Loan Status</th>
                 <th>Approved By</th>
-                 <th>Requested By</th>
+                <th>Requested By</th>
+                <th>Canceled By</th>
                 <th>EMI</th>
             </tr>
         </thead>
@@ -62,6 +63,7 @@
                 </td>
                 <td th:text="${loan.approvedby}"></td>
                 <td th:text="${loan.rejectedby}"></td>
+                <td th:text="${loan.canceledby}"></td>
                 <td th:text="${loan.emi}"></td>
             </tr>
         </tbody>

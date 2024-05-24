@@ -72,6 +72,7 @@ public class loginController {
 					model.addAttribute("payslipformvisibility", false);
 					model.addAttribute("paysliperrormessage", false);
 					session.setAttribute("employeeid", user.getEmpid());
+					session.setAttribute("employee_email_id", user.getEmailid());
 					return "Employee";
 				}
 				if (user.getRole().equalsIgnoreCase("Admin")) {

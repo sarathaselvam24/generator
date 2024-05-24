@@ -125,6 +125,8 @@ public class AdminLoginController {
 		return "viewLoanRequest";
 	}
 	
+	
+	
 	@GetMapping("/editLoanStatus/{id}/{status}")
 	public String editLoanStatus(HttpSession session,@PathVariable("id") int id, @PathVariable("status") String status, Model model) {
 	    Loan loan = loanrepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid loan Id:" + id));
@@ -134,10 +136,13 @@ public class AdminLoginController {
 	    	loan.setApprovedby(session.getAttribute("admin_email_id").toString());
 	    }else if(status.equalsIgnoreCase("rejected")) {
 	    	loan.setRejectedby(session.getAttribute("admin_email_id").toString());
+	    }else if(status.equalsIgnoreCase("Canceled")) {
+	    	loan.setCanceledby(session.getAttribute("employee_email_id").toString());
 	    }
 	    loanrepo.save(loan);
 	    return "redirect:/employeeLoanRequest";
 	}
+	
 	
 	@GetMapping("/searchEmployeeLoanRequest")
 	public String viewEmployeeLoanRequest(@RequestParam(name = "search", required = false) String search, Model model) {

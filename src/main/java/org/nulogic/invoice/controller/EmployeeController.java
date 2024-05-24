@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.List;
 
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.nulogic.invoice.model.Basicpay;
@@ -34,6 +35,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.TemplateEngine;
@@ -244,36 +246,81 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/loanrequest")
-	public String saveLoanRequest(HttpSession session, @RequestParam("loanamount") BigDecimal loanamount,
-			@RequestParam("emistartsfrom") String emistartsfrom, @RequestParam("note") String note,
-			@RequestParam("expectedmonth") String expectedmonth,
-			@RequestParam("repaymentterms") BigDecimal paymentterms, @RequestParam("emi") BigDecimal emi) {
-		System.out.println("emistartsfrom " + emistartsfrom);
-		System.out.println(" Employeeid " + session.getAttribute("employeeid"));
-		Loan loanRequest = new Loan();
-		String employeeid = session.getAttribute("employeeid").toString();
-		Basicpay ctcrepo = basicRepo.findByEmpid(employeeid);
-		if (ctcrepo != null) {
-			loanRequest.setEmpid(ctcrepo.getEmpid());
-			loanRequest.setEmailid(ctcrepo.getEmailid());
-			loanRequest
-					.setBasicpay(ctcrepo.getCtc().multiply(((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100))))
-							.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_UP));
-			loanRequest.setLoanamount(loanamount);
-			loanRequest.setExpectedmonth(formatMonthAndYear(expectedmonth));
-			loanRequest.setEmistartsfrom(formatMonthAndYear(emistartsfrom));
-			loanRequest.setNote(note);
-			loanRequest.setIssuedon(Date.valueOf(LocalDate.now()));
-			loanRequest.setLoanrequeststatus("Not Started");
-			loanRequest.setLoanstatus("Pending");
-			loanRequest.setRemainingbalance(loanamount);
-			loanRequest.setRepaymentterms(paymentterms);
-			loanRequest.setRequestedby(employeeRepoService.fetchEmployee(employeeid).getName());
-			loanRequest.setEmi(emi);
-			loanRepo.save(loanRequest);
-		}
-		return "hello";
+	public String saveLoanRequest(HttpSession session, Model model, @RequestParam("loanamount") BigDecimal loanamount,
+	                              @RequestParam("emistartsfrom") String emistartsfrom, @RequestParam("note") String note,
+	                              @RequestParam("expectedmonth") String expectedmonth,
+	                              @RequestParam("repaymentterms") BigDecimal paymentterms, @RequestParam("emi") BigDecimal emi) {
+	    String employeeid = session.getAttribute("employeeid").toString();
+	    List<Loan> onGoingLoanRequest = loanRepo.findByEmpidAndLoanRequestStatus(employeeid, "On going", "Not Started");
+	    
+	    if (!onGoingLoanRequest.isEmpty()) {
+	        model.addAttribute("notification", "You already have an ongoing loan. You are not allowed to apply for another loan.");
+	        return "loan";  // Return to the form view with the notification
+	    } else {
+	        Loan loanRequest = new Loan();
+	        Basicpay ctcrepo = basicRepo.findByEmpid(employeeid);
+	        if (ctcrepo != null) {
+	            loanRequest.setEmpid(ctcrepo.getEmpid());
+	            loanRequest.setEmailid(ctcrepo.getEmailid());
+	            loanRequest.setBasicpay(ctcrepo.getCtc().multiply(BigDecimal.valueOf(40).divide(BigDecimal.valueOf(100)))
+	                                   .divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2, RoundingMode.HALF_UP));
+	            loanRequest.setLoanamount(loanamount);
+	            loanRequest.setExpectedmonth(formatMonthAndYear(expectedmonth));
+	            loanRequest.setEmistartsfrom(formatMonthAndYear(emistartsfrom));
+	            loanRequest.setNote(note);
+	            loanRequest.setIssuedon(Date.valueOf(LocalDate.now()));
+	            loanRequest.setLoanrequeststatus("Not Started");
+	            loanRequest.setLoanstatus("Pending");
+	            loanRequest.setRemainingbalance(loanamount);
+	            loanRequest.setRepaymentterms(paymentterms);
+	            loanRequest.setRequestedby(employeeRepoService.fetchEmployee(employeeid).getName());
+	            loanRequest.setEmi(emi);
+	            loanRepo.save(loanRequest);
+	            model.addAttribute("notification", "Loan request created successfully.");
+	        }
+	    }
+	    return "loan";
 	}
+	
+	@GetMapping("/myLoanHistory")
+	public String viewLoanHistory(HttpSession session,Model model) {
+		String employeeid = session.getAttribute("employeeid").toString();
+		List<Loan> loanhistory = loanRepo.findByEmpid(employeeid);
+		System.out.println("loanhistory "+loanhistory);
+		model.addAttribute("loanhistory", loanhistory);
+		return "loanhistory";
+		
+	}
+	
+	@GetMapping("/editEmployeeLoanStatus/{id}/{status}")
+	public String editEmployeeLoanStatus(HttpSession session,@PathVariable("id") int id, @PathVariable("status") String status, Model model) {
+	    Loan loan = loanRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid loan Id:" + id));
+	    
+	    
+	    if(status.equalsIgnoreCase("Canceled")) {
+	    	loan.setLoanstatus(status);
+	    	loan.setCanceledby(session.getAttribute("employee_email_id").toString());
+	    }
+	    loanRepo.save(loan);
+	    return "redirect:/myLoanHistory";
+	}
+	
+	@GetMapping("/searchMyLoanRequestByStatus")
+	public String searchMyLoanRequestByStatus(HttpSession session,@RequestParam(name = "search", required = false) String search, Model model) {
+	    List<Loan> loanhistory;
+	    if (search == null || search.isEmpty()) {
+	    	loanhistory = loanRepo.findByEmpid(session.getAttribute("employeeid").toString());
+	    } else {
+	    	loanhistory = loanRepo.findByLoanstatusContaining(search);
+	    }
+	    model.addAttribute("loanhistory", loanhistory);
+	    model.addAttribute("search", search);
+	    
+	    System.out.println("loanhistory employee " + loanhistory.toString());
+	    return "loanhistory";
+	}
+
+
 
 	private String generateHtmlContent(Model model) {
 		Context context = new Context();
