@@ -98,22 +98,30 @@ public class AdminLoginController {
 	
 	
 	@GetMapping("/overtime")
-	public String overtime(Model model) {
-		List<MasterSalaryDetails> employeeDetails = adminService.getAllEmployeeSalary();
-		model.addAttribute("employeeSalary", employeeDetails);
+	public String overtime() {
 		return "Overtime";
 	}
 	
-	@GetMapping("/createEmployeeOvertime")
-	public void createEmployeeOverTime(Overtime overtime) {
+	@PostMapping("/createEmployeeOvertime")
+	public String createEmployeeOverTime( Model model,Overtime overtime) {
 		
+		Overtime ot= overTimeRepo.findByEmpid(overtime.getEmpid(), overtime.getMonth(), overtime.getYear());
+		
+		if (ot != null) {
+			ot.setOvertime(overtime.getOvertime());
+			overTimeRepo.save(ot);
+			model.addAttribute("msg", "Hours added successfully");
+		} else {
+			overTimeRepo.save(overtime);
+			model.addAttribute("msg", "Hours added successfully");
+		}
+		 
 //		,@RequestParam("empid") String employeeid, @RequestParam("email") String email,@RequestParam("month") String month,@RequestParam("year") String year,@RequestParam("overtime") String overtime)
-		System.out.println("employeeid "+overtime.getEmailid());
-		System.out.println("email "+overtime.getEmpid());
 		System.out.println("month "+overtime.getMonth());
 		System.out.println("year "+overtime.getYear());
 		System.out.println("overtime "+overtime.getOvertime());
-		overTimeRepo.save(overtime);
+		
+		return "hello";
 	}
 	
 	@GetMapping("/employeeLoanRequest")
@@ -294,6 +302,7 @@ public class AdminLoginController {
 			Salarydetails details = null;
 			String empId = employee.getEmpid();
 			Salarydetails sal = salaryRepo.findByPayslip(month, year, empId);
+			Overtime ot= overTimeRepo.findByEmpid(month, year, empId);
 			if (sal != null) {
 				BigDecimal basicpay = employee.getCtc()
 						.multiply((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100)));
@@ -354,7 +363,7 @@ public class AdminLoginController {
 				}
 				details = new Salarydetails(sal.getEmpid(), sal.getBasicpay(), sal.getHouseallowance(),
 						sal.getSpecialallowance(), nightshift, providentFund, professionalTex, salaryadvance,
-						BigDecimal.ZERO, payabledays, paidmonth, month, year);
+						BigDecimal.ZERO, payabledays, paidmonth, month, year,ot.getOvertime());
 				sal.setBasicpay(details.getBasicpay());
 				sal.setHouseallowance(details.getHouseallowance());
 				sal.setSpecialallowance(details.getSpecialallowance());
@@ -434,7 +443,7 @@ public class AdminLoginController {
 				}
 				details = new Salarydetails(empId, basicpay, houseAllowance, specialAllowance, nightshift,
 						providentFund, professionalTex, salaryadvance, BigDecimal.ZERO, payabledays, paidmonth, month,
-						year);
+						year,BigDecimal.ZERO);
 				salaryRepo.save(details);
 				model.addAttribute("msg", "Pay Slip Generated successfully");
 			}
