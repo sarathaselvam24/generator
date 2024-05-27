@@ -5,12 +5,10 @@
 <style>
 .logo-container {
 	width: 200px;
-	height: 70px;
-	background-image: url('http://localhost:8080/images/nulogic.png');
+	height: 100px;
 	background-size: contain;
 	background-repeat: no-repeat;
 	float: left;
-	border: 1px solid black;
 }
 
 .logo-text-container {
@@ -112,7 +110,7 @@ th {
 <body>
 	<div class="logo-text-container">
 		<div>
-			<div class="logo-container"></div>
+			<div class="logo-container"  th:style="|background-image: url('@{${logoImageUrl}}');|"></div>
 		</div>
 		<div class="logo-text">
 			<p>NU Information Technologies Pvt Ltd</p>
@@ -266,5 +264,6 @@ th {
 			</td>
 		</tr>
 	</table>
+	<I>Note:This is system generated file.</I>
 </body>
 </html>
