@@ -18,7 +18,9 @@ public class AppConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .defaultSuccessUrl("/user", true)
-            );
+            ).logout(logout -> logout
+                    .logoutSuccessUrl("/").permitAll()
+                    );
         
 
         return http.build();
