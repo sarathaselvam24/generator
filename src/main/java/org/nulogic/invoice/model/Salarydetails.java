@@ -42,6 +42,7 @@ public class Salarydetails {
 			}
 		}
 		System.out.println("payabledays "+payabledays+" paidmonth "+paidmonth);
+		System.out.println("overtimePay"+overtimePay);
 		this.empid=employeeid;
 		this.basicpay = basicpay;
 		this.houseallowance = houseallowance;
@@ -54,7 +55,7 @@ public class Salarydetails {
 		this.payslipyear = year;
 		 System.out.println("this.netpay 1 "+this.netpay);
 		 netpay = basicpay.add((houseallowance).add((specialallowance)
-				.add((otallowance))));
+				.add((this.otallowance))));
         this.payabledays=payabledays;
         this.paidmonth=paidmonth;
         this.total = netpay;

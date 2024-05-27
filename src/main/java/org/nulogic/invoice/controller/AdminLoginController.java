@@ -346,7 +346,7 @@ public class AdminLoginController {
 				System.out.println("loanReq "+loanReq);
 			
 				BigDecimal nightshift = BigDecimal.valueOf(0);
-				BigDecimal providentFund = BigDecimal.valueOf(0);
+				BigDecimal providentFund = new BigDecimal("1800");
 				BigDecimal houseAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
 				BigDecimal specialAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
 				
@@ -356,10 +356,10 @@ public class AdminLoginController {
 				}
 				BigDecimal professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
 				if (month.equalsIgnoreCase("January")) {
-					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+					professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
 				}
 				if (month.equalsIgnoreCase("June")) {
-					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+					professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
 				}
 				details = new Salarydetails(sal.getEmpid(), sal.getBasicpay(), sal.getHouseallowance(),
 						sal.getSpecialallowance(), nightshift, providentFund, professionalTex, salaryadvance,
@@ -390,10 +390,14 @@ public class AdminLoginController {
 						RoundingMode.HALF_UP);
 				System.out.println("basicpay 2 " + basicpay);
 				BigDecimal nightshift = BigDecimal.valueOf(0);
-				BigDecimal providentFund = BigDecimal.valueOf(0);
+				BigDecimal providentFund = new BigDecimal("1800");
 				BigDecimal houseAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
 				BigDecimal specialAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
-				
+				Overtime otime= overTimeRepo.findByEmpid(month, year, empId);
+				BigDecimal overtime =  BigDecimal.ZERO;
+				if(otime != null) {
+				 overtime = otime.getOvertime();
+				}
 				 
 				 Loan loanNotStartedReq = loanrepo.findLoanNotStaredrequest(employee.getEmpid(),"Approved","Not Started");
 
@@ -436,14 +440,14 @@ public class AdminLoginController {
 				}
 				BigDecimal professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
 				if (month.equalsIgnoreCase("January")) {
-					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+					professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
 				}
 				if (month.equalsIgnoreCase("June")) {
-					providentFund = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
+					professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
 				}
 				details = new Salarydetails(empId, basicpay, houseAllowance, specialAllowance, nightshift,
 						providentFund, professionalTex, salaryadvance, BigDecimal.ZERO, payabledays, paidmonth, month,
-						year,BigDecimal.ZERO);
+						year,overtime);
 				salaryRepo.save(details);
 				model.addAttribute("msg", "Pay Slip Generated successfully");
 			}
