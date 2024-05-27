@@ -305,7 +305,7 @@ public class AdminLoginController {
 			Overtime ot= overTimeRepo.findByEmpid(month, year, empId);
 			if (sal != null) {
 				BigDecimal basicpay = employee.getCtc()
-						.multiply((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100)));
+						.multiply((BigDecimal.valueOf(50)).divide(BigDecimal.valueOf(100)));
 				basicpay = basicpay.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
 						RoundingMode.HALF_UP);
 				 
@@ -347,9 +347,12 @@ public class AdminLoginController {
 			
 				BigDecimal nightshift = BigDecimal.valueOf(0);
 				BigDecimal providentFund = new BigDecimal("1800");
-				BigDecimal houseAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
-				BigDecimal specialAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
-				
+				BigDecimal houseAllowance = employee.getCtc().multiply(BigDecimal.valueOf(20).divide(BigDecimal.valueOf(100)));
+				houseAllowance=houseAllowance.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
+						RoundingMode.HALF_UP);
+				BigDecimal specialAllowance = employee.getCtc().multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
+				specialAllowance=specialAllowance.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
+						RoundingMode.HALF_UP);
 				
 				if (employee.getShift().equalsIgnoreCase("Night")) {
 					nightshift = paidmonth.multiply(BigDecimal.valueOf(200));
@@ -384,16 +387,19 @@ public class AdminLoginController {
 				System.out.println("employee.toString " + employee.toString());
 				System.out.println("employee.getCtc " + employee.getCtc());
 				BigDecimal basicpay = employee.getCtc()
-						.multiply((BigDecimal.valueOf(40)).divide(BigDecimal.valueOf(100)));
+						.multiply((BigDecimal.valueOf(50)).divide(BigDecimal.valueOf(100)));
 				System.out.println("basicpay 1 " + basicpay);
 				basicpay = basicpay.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
 						RoundingMode.HALF_UP);
 				System.out.println("basicpay 2 " + basicpay);
 				BigDecimal nightshift = BigDecimal.valueOf(0);
 				BigDecimal providentFund = new BigDecimal("1800");
-				BigDecimal houseAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
-				BigDecimal specialAllowance = basicpay.multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
-				Overtime otime= overTimeRepo.findByEmpid(month, year, empId);
+				BigDecimal houseAllowance = employee.getCtc().multiply(BigDecimal.valueOf(20).divide(BigDecimal.valueOf(100)));
+				houseAllowance=houseAllowance.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
+						RoundingMode.HALF_UP);
+				BigDecimal specialAllowance = employee.getCtc().multiply(BigDecimal.valueOf(30).divide(BigDecimal.valueOf(100)));
+				specialAllowance=specialAllowance.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
+						RoundingMode.HALF_UP);Overtime otime= overTimeRepo.findByEmpid(month, year, empId);
 				BigDecimal overtime =  BigDecimal.ZERO;
 				if(otime != null) {
 				 overtime = otime.getOvertime();
