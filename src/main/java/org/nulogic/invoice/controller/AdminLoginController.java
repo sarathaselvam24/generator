@@ -312,40 +312,41 @@ public class AdminLoginController {
 				 Loan loanNotStartedReq = loanrepo.findLoanNotStaredrequest(employee.getEmpid(),"Approved","Not Started");
 
 					BigDecimal salaryadvance =  BigDecimal.ZERO;
-				 if(loanNotStartedReq !=null ) {
-					 System.out.println("emifrom "+loanNotStartedReq.getEmistartsfrom());
-					 System.out.println("month "+month);
-					 System.out.println("year "+year);
-					 
-					 System.out.println("formatMonthAndYear(month+\" \"+year) "+formatMonthAndYear(month+" "+year));
-					 
-					int compareDate = loanNotStartedReq.getEmistartsfrom().compareTo(formatMonthAndYear(month+" "+year));
-					
-				 System.out.println("not started compare "+compareDate) ;
-				 
-				 if(compareDate == 0) {
-					 if(loanNotStartedReq.getLoanamount().compareTo(loanNotStartedReq.getRemainingbalance())==0) {
-						 loanNotStartedReq.setLoanrequeststatus("On going");
-						 salaryadvance = loanNotStartedReq.getEmi();
-						 loanrepo.save(loanNotStartedReq);
-					 }
-				 }
-				 }
-
-				Loan loanReq = loanrepo.findLoanrequest(employee.getEmpid(),"Approved","On going",BigDecimal.valueOf(0));
-				if(loanReq != null) {
-					BigDecimal loanrequestRemainingBalance = loanReq.getRemainingbalance().subtract(loanReq.getEmi());
-					loanReq.setRemainingbalance(loanrequestRemainingBalance);
-					if(loanrequestRemainingBalance==BigDecimal.valueOf(0) || ((loanReq.getLoanamount().subtract(loanReq.getEmi().multiply(loanReq.getRepaymentterms()))).compareTo(loanReq.getRemainingbalance()) == 0))  {
-						salaryadvance = loanReq.getEmi();
-						loanReq.setLoanrequeststatus("Completed");
-						loanrepo.save(loanReq);
-					}
-					System.out.println("after salary advance "+basicpay);
-				}
-				System.out.println("loanReq "+loanReq);
-			
+//				 if(loanNotStartedReq !=null ) {
+//					 System.out.println("emifrom "+loanNotStartedReq.getEmistartsfrom());
+//					 System.out.println("month "+month);
+//					 System.out.println("year "+year);
+//					 
+//					 System.out.println("formatMonthAndYear(month+\" \"+year) "+formatMonthAndYear(month+" "+year));
+//					 
+//					int compareDate = loanNotStartedReq.getEmistartsfrom().compareTo(formatMonthAndYear(month+" "+year));
+//					
+//				 System.out.println("not started compare "+compareDate) ;
+//				 
+//				 if(compareDate == 0) {
+//					 if(loanNotStartedReq.getLoanamount().compareTo(loanNotStartedReq.getRemainingbalance())==0) {
+//						 loanNotStartedReq.setLoanrequeststatus("On going");
+//						 salaryadvance = loanNotStartedReq.getEmi();
+//						 loanrepo.save(loanNotStartedReq);
+//					 }
+//				 }
+//				 }
+//
+//				Loan loanReq = loanrepo.findLoanrequest(employee.getEmpid(),"Approved","On going",BigDecimal.valueOf(0));
+//				if(loanReq != null) {
+//					BigDecimal loanrequestRemainingBalance = loanReq.getRemainingbalance().subtract(loanReq.getEmi());
+//					loanReq.setRemainingbalance(loanrequestRemainingBalance);
+//					if(loanrequestRemainingBalance==BigDecimal.valueOf(0) || ((loanReq.getLoanamount().subtract(loanReq.getEmi().multiply(loanReq.getRepaymentterms()))).compareTo(loanReq.getRemainingbalance()) == 0))  {
+//						salaryadvance = loanReq.getEmi();
+//						loanReq.setLoanrequeststatus("Completed");
+//						loanrepo.save(loanReq);
+//					}
+//					System.out.println("after salary advance "+basicpay);
+//				}
+//				System.out.println("loanReq "+loanReq);
+//			
 				BigDecimal nightshift = BigDecimal.valueOf(0);
+				BigDecimal overtime = BigDecimal.valueOf(0);
 				BigDecimal providentFund = new BigDecimal("1800");
 				BigDecimal houseAllowance = employee.getCtc().multiply(BigDecimal.valueOf(20).divide(BigDecimal.valueOf(100)));
 				houseAllowance=houseAllowance.divide(BigDecimal.valueOf(12), MathContext.DECIMAL128).setScale(2,
@@ -364,9 +365,12 @@ public class AdminLoginController {
 				if (month.equalsIgnoreCase("June")) {
 					professionalTex = basicpay.multiply(BigDecimal.valueOf(12).divide(BigDecimal.valueOf(100)));
 				}
+				if(null != ot) {
+					overtime = ot.getOvertime();
+				}
 				details = new Salarydetails(sal.getEmpid(), sal.getBasicpay(), sal.getHouseallowance(),
 						sal.getSpecialallowance(), nightshift, providentFund, professionalTex, salaryadvance,
-						BigDecimal.ZERO, payabledays, paidmonth, month, year,ot.getOvertime());
+						BigDecimal.ZERO, payabledays, paidmonth, month, year,overtime);
 				sal.setBasicpay(details.getBasicpay());
 				sal.setHouseallowance(details.getHouseallowance());
 				sal.setSpecialallowance(details.getSpecialallowance());
