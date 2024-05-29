@@ -81,15 +81,13 @@ button:hover {
 </style>
 </head>
 <body>
-	<form th:action="@{/createEmployeeOvertime}" >
+	<form th:action="@{/createEmployeeOvertime}" method="post">
 		<div class="form-group">
 			<h2>Basic Employee Details</h2>
 			<label for="empid">Employee ID :</label> 
 			<input type="text"
-				id="empid" name="empid" required>  <label
-				for="email">Email :</label> 
-				<input type="text" id="email"
-				name="emailid" required> 
+				id="empid" name="empid" required>  
+				
 				 <label
 				for="month">Month :</label> 
 					<label for="month">Month:</label> <select id="month" name="month">

@@ -29,15 +29,25 @@ public class Salarydetails {
 
 	public Salarydetails(String employeeid, BigDecimal basicpay, BigDecimal houseallowance, BigDecimal specialallowance,
 			BigDecimal otallowance, BigDecimal providentfund, BigDecimal professionaltax, BigDecimal salaryadvance,
-			BigDecimal netpay,BigDecimal payabledays,BigDecimal paidmonth, String month, String year) {
+			BigDecimal netpay,BigDecimal payabledays,BigDecimal paidmonth, String month, String year,BigDecimal overtime) {
 		super();
-
+		BigDecimal oneDayBasicPay = basicpay.divide(payabledays, 0, RoundingMode.HALF_UP);
+		BigDecimal overtimePay = BigDecimal.ZERO;
+		if (overtime.compareTo(BigDecimal.ZERO) > 0) {
+			BigDecimal fullDays = overtime.divide(new BigDecimal("8"), 0, RoundingMode.DOWN);
+			BigDecimal remainingHours = overtime.remainder(new BigDecimal("8"));
+			overtimePay = overtimePay.add(oneDayBasicPay.multiply(fullDays));
+			if (remainingHours.compareTo(new BigDecimal("4")) >= 0) {
+				overtimePay = overtimePay.add(oneDayBasicPay.divide(new BigDecimal("2"), 0, RoundingMode.HALF_UP));
+			}
+		}
 		System.out.println("payabledays "+payabledays+" paidmonth "+paidmonth);
+		System.out.println("overtimePay"+overtimePay);
 		this.empid=employeeid;
 		this.basicpay = basicpay;
 		this.houseallowance = houseallowance;
 		this.specialallowance = specialallowance;
-		this.otallowance = otallowance;
+		this.otallowance = otallowance.add(overtimePay);
 		this.providentfund = providentfund;
 		this.professionaltax = professionaltax;
 		this.salaryadvance = salaryadvance;
@@ -45,7 +55,7 @@ public class Salarydetails {
 		this.payslipyear = year;
 		 System.out.println("this.netpay 1 "+this.netpay);
 		 netpay = basicpay.add((houseallowance).add((specialallowance)
-				.add((otallowance))));
+				.add((this.otallowance))));
         this.payabledays=payabledays;
         this.paidmonth=paidmonth;
         this.total = netpay;

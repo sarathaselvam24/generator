@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 @Entity
+@Table(name = "overtime")
 public class Overtime {
 	@Id
 	private String empid;
-	
-	private String emailid;
 	
 	private BigDecimal overtime;
 	
@@ -23,14 +23,6 @@ public class Overtime {
 
 	public void setEmpid(String empid) {
 		this.empid = empid;
-	}
-
-	public String getEmailid() {
-		return emailid;
-	}
-
-	public void setEmailid(String emailid) {
-		this.emailid = emailid;
 	}
 
 	public BigDecimal getOvertime() {
@@ -59,7 +51,7 @@ public class Overtime {
 
 	@Override
 	public String toString() {
-		return "Overtime [empid=" + empid + ", emailid=" + emailid + ", overtime=" + overtime + ", month=" + month
+		return "Overtime [empid=" + empid  + ", overtime=" + overtime + ", month=" + month
 				+ ", year=" + year + "]";
 	}
 	

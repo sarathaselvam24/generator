@@ -26,6 +26,7 @@ import org.nulogic.invoice.servic.EmployeeRepoService;
 import org.nulogic.invoice.servic.SalarydetailsRepoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -219,9 +220,12 @@ public class EmployeeController {
 			model.addAttribute("salarydetails", salarydetails);
 			model.addAttribute("employeeAccountDetail", employeeAccountDetail);
 			model.addAttribute("employeeDetail", employee);
-			byte[] logoBytes = Files.readAllBytes(Paths.get("src/main/resources/static/images/nulogic.png"));
-			String logoBase64 = Base64.getEncoder().encodeToString(logoBytes);
-			model.addAttribute("logoBase64", logoBase64);
+//			byte[] logoBytes = Files.readAllBytes(Paths.get("src/main/resources/static/images/nulogic.png"));
+//			String logoBase64 = Base64.getEncoder().encodeToString(logoBytes);
+//			model.addAttribute("logoBase64", logoBase64);
+			
+			String imageUrl = new ClassPathResource("static/images/nulogic.png").getURL().toString();
+	        model.addAttribute("logoImageUrl", imageUrl);
 
 			String htmlContent = generateHtmlContent(model);
 			byte[] pdfBytes = generatePdfFromHtml(htmlContent);
